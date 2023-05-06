@@ -52,8 +52,9 @@ public class Player : MonoBehaviour
         }
 
         if(Input.GetAxis("Vertical") > 0){
-            _animator.Play("Base Layer.ladder-Animation");
+            _animator.SetTrigger("Climb");
             _animator.speed=1;
+            _audio.enabled = true;
         }else
 
         if(isgrounded){
@@ -61,11 +62,11 @@ public class Player : MonoBehaviour
 
             if(movement != 0){
                 if(Input.GetButtonDown("Fire1")){
-                    _animator.Play("Base Layer.Run_shoot_Animation");
+                    _animator.SetTrigger("Run-Shoot");
                     Shoot();
                 }
                 else if(Input.GetAxis("Fire1") == 0){
-                    _animator.Play("Base Layer.Run_Animation");
+                    _animator.SetTrigger("Run");
                 }
 
                 if(!_audio.isPlaying){
@@ -74,11 +75,11 @@ public class Player : MonoBehaviour
             }
             else if(movement == 0){
                 if(Input.GetButtonDown("Fire1")){
-                    _animator.Play("Base Layer.Shoot_Animation");
+                    _animator.SetTrigger("Shoot");
                     Shoot();
                 }
                 else if(Input.GetAxis("Fire1") == 0){
-                    _animator.Play("Base Layer.idle-Animation");
+                    _animator.SetTrigger("Idle");
                 }
                 
                 _audio.enabled = false;
