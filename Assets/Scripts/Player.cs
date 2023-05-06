@@ -8,15 +8,22 @@ public class Player : MonoBehaviour
     Animator _animator;
     SpriteRenderer _sprite;
     Rigidbody2D _body;
-    AudioSource _audio;
+    public AudioSource walkAudio;
+    public AudioSource shootAudio;
     public Transform firePoint;
     public GameObject bulletPrefab;
 
     Vector3 pos;
+    Vector3 lookDirection;
+    float lookAngle;
 
     bool isgrounded = true;
     bool facingRight = true;
+    bool atLadder = false;
     bool prevOrientation = true;
+    public bool gunEquipped = false;
+    float fireRate = 0.4f;
+    float nextFire;
     public Transform feetPos;
     public float checkRadius;
     public LayerMask whatIsGround;
@@ -29,65 +36,91 @@ public class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
         _sprite = GetComponent<SpriteRenderer>();
         _body = GetComponent<Rigidbody2D>();
-        _audio = GetComponent<AudioSource>();
         pos = transform.position;
     }
 
     void Update(){
+
+        lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 rotation = lookDirection - transform.position;
+        lookAngle = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+        
+        firePoint.rotation = Quaternion.Euler(0, 0, lookAngle);
+        
+
         isgrounded = Physics2D.OverlapCircle(feetPos.position, checkRadius, whatIsGround);
         getInput();
          
         float movement = Input.GetAxis("Horizontal");
 
-        if(movement < 0){
-            facingRight = false;
-        }
-        else if(movement > 0){
-            facingRight = true;
-        }
+        if(gunEquipped){
+            var delta = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 
-        if(facingRight != prevOrientation){
-            transform.Rotate(0, 180, 0);
+            if (delta.x >= 0 && !facingRight) { 
+                transform.Rotate(0, 180, 0); 
+                facingRight = true;
+            } else if (delta.x < 0 && facingRight) { 
+                transform.Rotate(0, 180, 0); 
+                facingRight = false;
+            }
             prevOrientation = facingRight;
         }
+        else{
+            if(movement < 0){
+                facingRight = false;
+            }
+            else if(movement > 0){
+                facingRight = true;
+            }
 
-        if(Input.GetAxis("Vertical") > 0){
+            if(facingRight != prevOrientation){
+                transform.Rotate(0, 180, 0);
+                prevOrientation = facingRight;
+            }
+        }
+        
+         
+        
+
+        if(atLadder && Input.GetAxis("Vertical") > 0){
             _animator.SetTrigger("Climb");
             _animator.speed=1;
-            _audio.enabled = true;
+            walkAudio.enabled = true;
         }else
 
         if(isgrounded){
             _animator.speed=1;
 
             if(movement != 0){
-                if(Input.GetButtonDown("Fire1")){
+                if(gunEquipped){
+                    if(Input.GetButtonDown("Fire1") && Time.time > nextFire){
+                        Shoot();
+                    }
                     _animator.SetTrigger("Run-Shoot");
-                    Shoot();
                 }
-                else if(Input.GetAxis("Fire1") == 0){
+                else{
                     _animator.SetTrigger("Run");
                 }
 
-                if(!_audio.isPlaying){
-                    _audio.enabled = true;
+                if(!walkAudio.isPlaying){
+                    walkAudio.enabled = true;
                 }
             }
             else if(movement == 0){
-                if(Input.GetButtonDown("Fire1")){
+                if(Input.GetButtonDown("Fire1") && Time.time > nextFire && gunEquipped){
                     _animator.SetTrigger("Shoot");
                     Shoot();
                 }
-                else if(Input.GetAxis("Fire1") == 0){
+                else {
                     _animator.SetTrigger("Idle");
                 }
                 
-                _audio.enabled = false;
+                walkAudio.enabled = false;
             }
         }
         else if(!isgrounded){
             _animator.speed=0;
-            _audio.enabled = false;
+            walkAudio.enabled = false;
         }    
     }
 
@@ -99,7 +132,7 @@ public class Player : MonoBehaviour
     {
          float movement = Input.GetAxis("Horizontal");
 
-        if(Input.GetAxis("Vertical") > 0){
+        if(atLadder && Input.GetAxis("Vertical") > 0){
             _body.velocity = new Vector3(0, 5f, 0);
         }else
 
@@ -123,6 +156,8 @@ public class Player : MonoBehaviour
     void Shoot()
     {
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        shootAudio.enabled = true;
+        nextFire = Time.time + fireRate;  
     }
     // void OnCollisionStay2D(Collision2D theCollision)
     // {
