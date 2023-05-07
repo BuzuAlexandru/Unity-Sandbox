@@ -12,6 +12,11 @@ public class Bullet : MonoBehaviour
     }
 
     void OnTriggerEnter2D(){
+        StartCoroutine(DespawnDelay());
+    }
+
+    IEnumerator DespawnDelay(){
+        yield return new WaitForSeconds(0.05f);
         Destroy(gameObject);
     }
 

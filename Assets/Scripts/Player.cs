@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    Animator _animator;
-    SpriteRenderer _sprite;
-    Rigidbody2D _body;
+    public Animator _animator;
+    public SpriteRenderer _sprite;
+    public Rigidbody2D _body;
     public AudioSource walkAudio;
     public AudioSource shootAudio;
     public Transform firePoint;
@@ -17,9 +17,9 @@ public class Player : MonoBehaviour
     Vector3 lookDirection;
     float lookAngle;
 
-    bool isgrounded = true;
+    public bool isgrounded = true;
     bool facingRight = true;
-    bool atLadder = false;
+    public bool atLadder = false;
     bool prevOrientation = true;
     public bool gunEquipped = false;
     float fireRate = 0.4f;
@@ -33,10 +33,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        _animator = GetComponent<Animator>();
-        _sprite = GetComponent<SpriteRenderer>();
-        _body = GetComponent<Rigidbody2D>();
-        pos = transform.position;
+
     }
 
     void Update(){
@@ -80,48 +77,51 @@ public class Player : MonoBehaviour
         }
         
          
-        
 
         if(atLadder && Input.GetAxis("Vertical") > 0){
             _animator.SetTrigger("Climb");
             _animator.speed=1;
             walkAudio.enabled = true;
-        }else
+        }
 
-        if(isgrounded){
+        else if(isgrounded){
             _animator.speed=1;
 
             if(movement != 0){
                 if(gunEquipped){
-                    if(Input.GetButtonDown("Fire1") && Time.time > nextFire){
-                        Shoot();
-                    }
                     _animator.SetTrigger("Run-Shoot");
                 }
                 else{
                     _animator.SetTrigger("Run");
                 }
 
-                if(!walkAudio.isPlaying){
-                    walkAudio.enabled = true;
-                }
+                walkAudio.enabled = true;
+                
             }
             else if(movement == 0){
                 if(Input.GetButtonDown("Fire1") && Time.time > nextFire && gunEquipped){
                     _animator.SetTrigger("Shoot");
-                    Shoot();
                 }
                 else {
                     _animator.SetTrigger("Idle");
                 }
-                
-                walkAudio.enabled = false;
+                float jump = Input.GetAxis("Jump");
+
+                if(jump > 0 && gunEquipped){
+                    _animator.ResetTrigger("Idle");
+                    _animator.SetTrigger("Run-Shoot");     
+                }
+                StartCoroutine(WalkSoundDelay());
             }
         }
         else if(!isgrounded){
             _animator.speed=0;
-            walkAudio.enabled = false;
-        }    
+            StartCoroutine(WalkSoundDelay());
+        }  
+
+        if(Input.GetButtonDown("Fire1") && Time.time > nextFire && gunEquipped){
+            Shoot();
+        }
     }
 
     void getInput(){
@@ -130,24 +130,20 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-         float movement = Input.GetAxis("Horizontal");
+        float movement = Input.GetAxis("Horizontal");
 
         if(atLadder && Input.GetAxis("Vertical") > 0){
-            _body.velocity = new Vector3(0, 5f, 0);
-        }else
+            _body.velocity = new Vector3(_body.velocity.x, 10f, 0);
+        }
 
+        if(movement != 0){
+            _body.velocity = new Vector3(movement * speed, _body.velocity.y, 0);
+        }
         if(isgrounded){
-            if(movement != 0){
-                _body.velocity = new Vector3(movement * speed, 0, 0);
-            }
-
             float jump = Input.GetAxis("Jump");
 
             if(jump > 0){
-                if(movement != 0){
-                    _body.velocity = new Vector3(movement * speed, jump * jumpHeight, 0);
-                }
-                else _body.velocity = new Vector3(0, jump * jumpHeight, 0);
+                _body.velocity = new Vector3(_body.velocity.x, jump * jumpHeight, 0); 
             }
         }
         
@@ -157,22 +153,34 @@ public class Player : MonoBehaviour
     {
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         shootAudio.enabled = true;
-        nextFire = Time.time + fireRate;  
+        nextFire = Time.time + fireRate; 
+        StartCoroutine(GunSoundDelay()); 
     }
-    // void OnCollisionStay2D(Collision2D theCollision)
-    // {
-    //     if (!isgrounded && theCollision.gameObject.name == "floor")
-    //     {
-    //         isgrounded = true;
-    //     }
-    // }
+
+    IEnumerator GunSoundDelay(){
+        yield return new WaitForSeconds(fireRate - 0.025f);
+        shootAudio.enabled = false;
+    }
+
+    IEnumerator WalkSoundDelay(){
+        yield return new WaitForSeconds(0.04f);
+        walkAudio.enabled = false;
+    }
+
+    void OnTriggerEnter2D(Collider2D theCollision)
+    {
+        if (theCollision.CompareTag("Ladder"))
+        {
+            atLadder = true;
+        }
+    }
     
     
-    // void OnCollisionExit2D(Collision2D theCollision)
-    // {
-    //     if (theCollision.gameObject.name == "floor")
-    //     {
-    //         isgrounded = false;
-    //     }
-    // }
+    void OnTriggerExit2D(Collider2D theCollision)
+    {
+        if (theCollision.CompareTag("Ladder"))
+        {
+            atLadder = false;
+        }
+    }
 }
