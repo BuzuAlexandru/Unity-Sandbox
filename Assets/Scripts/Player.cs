@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public Inventory inventory;
+    public bool inventoryShowing = false;
     public Animator _animator;
     public SpriteRenderer _sprite;
     public Rigidbody2D _body;
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-
+        inventory = GetComponent<Inventory>();
     }
 
     void Update(){
@@ -122,6 +124,12 @@ public class Player : MonoBehaviour
         if(Input.GetButtonDown("Fire1") && Time.time > nextFire && gunEquipped){
             Shoot();
         }
+        
+        if (Input.GetKeyDown(KeyCode.E)){
+            inventoryShowing = !inventoryShowing;
+        }
+
+        inventory.inventoryUI.SetActive(inventoryShowing);
     }
 
     void getInput(){
