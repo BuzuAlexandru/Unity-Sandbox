@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public int selectedSlotIndex = 0;
+    public GameObject hotbarSelector;
     public Inventory inventory;
     public bool inventoryShowing = false;
+    public bool hotbarShowing = true;
     public Animator _animator;
     public SpriteRenderer _sprite;
     public Rigidbody2D _body;
@@ -127,9 +130,25 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.E)){
             inventoryShowing = !inventoryShowing;
+            hotbarShowing = !hotbarShowing;
         }
 
         inventory.inventoryUI.SetActive(inventoryShowing);
+        inventory.hotbarUI.SetActive(hotbarShowing);
+
+        if (Input.GetAxis("Mouse ScrollWheel") < 0){
+            if (selectedSlotIndex<inventory.inventoryWidth-1)
+                selectedSlotIndex+=1;
+        } else if (Input.GetAxis("Mouse ScrollWheel") > 0){
+            if (selectedSlotIndex>0)
+                selectedSlotIndex-=1;
+        }
+
+        if (selectedSlotIndex == 0)
+            gunEquipped = true;
+        else gunEquipped = false;
+
+        hotbarSelector.transform.position = inventory.hotbarUISlots[selectedSlotIndex].transform.position;
     }
 
     void getInput(){
