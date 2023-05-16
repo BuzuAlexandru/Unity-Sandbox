@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
     Vector3 lookDirection;
     float lookAngle;
 
+    public float health = 100f;
+
     public bool isgrounded = true;
     bool facingRight = true;
     public bool atLadder = false;
