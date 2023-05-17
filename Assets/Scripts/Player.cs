@@ -28,7 +28,6 @@ public class Player : MonoBehaviour
     Vector3 lookDirection;
     float lookAngle;
 
-    public int maxHealth = 100;
     public int health;
 
     public bool isgrounded = true;
