@@ -22,7 +22,10 @@ public class Player : MonoBehaviour
     Vector3 lookDirection;
     float lookAngle;
 
-    public float health = 100f;
+    public int maxHealth = 100;
+    public int health;
+    public int damage;
+    public BatGFX enemyHealth;
 
     public bool isgrounded = true;
     bool facingRight = true;
@@ -40,7 +43,25 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        health = maxHealth;
         inventory = GetComponent<Inventory>();
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Bullet")
+        {
+            enemyHealth.TakeDamage(damage);
+        }
     }
 
     void Update(){
