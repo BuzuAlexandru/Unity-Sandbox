@@ -10,6 +10,8 @@ public class BatGFX : MonoBehaviour
     public Player playerHealth;
     public int maxHealth = 100;
     public int health;
+    public float searchRange = 10f;
+
 
     void Start()
     {
@@ -30,6 +32,7 @@ public class BatGFX : MonoBehaviour
             health -= 50;
             if (health <= 0)
             {
+                aiPath.enabled = false;
                 Destroy(gameObject);
             }
         }
@@ -38,12 +41,28 @@ public class BatGFX : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (aiPath.desiredVelocity.x >= 0.01f)
+        // Get the distance between the enemy and the player
+        float distanceToPlayer = Vector2.Distance(transform.position, playerHealth.transform.position);
+
+        // Check if the player is within the search range
+        if (distanceToPlayer <= searchRange)
         {
-            transform.localScale = new Vector3(-1f, 1f, 1f);
-        } else if (aiPath.desiredVelocity.x <= -0.01f)
+            // Enable A* pathfinding to move towards the player
+            aiPath.enabled = true;
+
+            if (aiPath.desiredVelocity.x >= 0.01f)
+            {
+                transform.localScale = new Vector3(-1f, 1f, 1f);
+            }
+            else if (aiPath.desiredVelocity.x <= -0.01f)
+            {
+                transform.localScale = new Vector3(1f, 1f, 1f);
+            }
+        }
+        else
         {
-            transform.localScale = new Vector3(1f, 1f, 1f);
+            // Disable A* pathfinding if the player is outside the search range
+            aiPath.enabled = false;
         }
     }
 }
