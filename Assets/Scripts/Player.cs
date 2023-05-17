@@ -6,10 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    public HealthBar healthBar;
     public int selectedSlotIndex = 0;
     public GameObject hotbarSelector;
     public Inventory inventory;
+    public Crafting crafting;
     public bool inventoryShowing = false;
+    public bool craftingShowing = false;
     public bool hotbarShowing = true;
     public Animator _animator;
     public SpriteRenderer _sprite;
@@ -18,6 +21,8 @@ public class Player : MonoBehaviour
     public AudioSource shootAudio;
     public Transform firePoint;
     public GameObject bulletPrefab;
+    public int maxHealth = 100;
+    public int currentHealth;
 
     Vector3 pos;
     Vector3 lookDirection;
@@ -46,6 +51,9 @@ public class Player : MonoBehaviour
     {
         health = maxHealth;
         inventory = GetComponent<Inventory>();
+        crafting = GetComponent<Crafting>();
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     public void TakeDamage(int damage)
@@ -147,11 +155,17 @@ public class Player : MonoBehaviour
             Shoot();
         }
         
-        if (Input.GetKeyDown(KeyCode.E)){
+        if (Input.GetKeyDown(KeyCode.E) && !craftingShowing){
             inventoryShowing = !inventoryShowing;
             hotbarShowing = !hotbarShowing;
         }
 
+        if (Input.GetKeyDown(KeyCode.Q) && !inventoryShowing){
+            craftingShowing = !craftingShowing;
+            hotbarShowing = !hotbarShowing;
+        }
+
+        crafting.craftingUI.SetActive(craftingShowing);
         inventory.inventoryUI.SetActive(inventoryShowing);
         inventory.hotbarUI.SetActive(hotbarShowing);
 
@@ -232,4 +246,62 @@ public class Player : MonoBehaviour
             atLadder = false;
         }
     }
+
+    public void updateButton1(){
+        if (inventory.inventorySlots[5,3].quantity >= 1 && inventory.inventorySlots[6,3].quantity >= 1){
+            inventory.inventorySlots[5,3].quantity-=1;
+            inventory.inventorySlots[6,3].quantity-=1;
+            inventory.inventorySlots[0,2].quantity+=1;
+            inventory.UpdateInventoryUI();
+        }
+    }
+
+    public void updateButton2(){
+        if (inventory.inventorySlots[7,3].quantity >= 3){
+            inventory.inventorySlots[7,3].quantity-=3;
+            inventory.inventorySlots[1,2].quantity+=1;
+            inventory.UpdateInventoryUI();
+        }
+    }
+
+    public void updateButton3(){
+        if (inventory.inventorySlots[4,3].quantity >= 3 && inventory.inventorySlots[3,3].quantity >= 3){
+            inventory.inventorySlots[4,3].quantity-=3;
+            inventory.inventorySlots[3,3].quantity-=3;
+            inventory.inventorySlots[2,2].quantity+=1;
+            inventory.UpdateInventoryUI();
+        }
+    }
+
+    public void updateButton4(){
+        if (inventory.inventorySlots[8,3].quantity >= 2 && inventory.inventorySlots[2,3].quantity >= 2){
+            inventory.inventorySlots[8,3].quantity-=2;
+            inventory.inventorySlots[2,3].quantity-=2;
+            inventory.inventorySlots[3,2].quantity+=1;
+            inventory.UpdateInventoryUI();
+        }
+    }
+
+    public void updateButton5(){
+        if (inventory.inventorySlots[7,3].quantity >= 2 && inventory.inventorySlots[4,3].quantity >= 2){
+            inventory.inventorySlots[7,3].quantity-=2;
+            inventory.inventorySlots[4,3].quantity-=2;
+            inventory.inventorySlots[4,2].quantity+=1;
+            inventory.UpdateInventoryUI();
+        }
+    }
+
+    public void updateButton6(){
+        if (inventory.inventorySlots[0,2].quantity >= 1 && inventory.inventorySlots[1,2].quantity >= 1 && inventory.inventorySlots[2,2].quantity >= 1 && inventory.inventorySlots[3,2].quantity >= 1 && inventory.inventorySlots[4,2].quantity >= 1){
+            inventory.inventorySlots[0,2].quantity -=1;
+            inventory.inventorySlots[1,2].quantity -=1;
+            inventory.inventorySlots[2,2].quantity -=1;
+            inventory.inventorySlots[3,2].quantity -=1;
+            inventory.inventorySlots[4,2].quantity -=1;
+            inventory.inventorySlots[5,2].quantity +=1;
+            inventory.UpdateInventoryUI();
+        }
+    }
+
+    
 }
