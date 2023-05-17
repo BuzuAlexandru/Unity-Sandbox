@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     public bool atLadder = false;
     bool prevOrientation = true;
     public bool gunEquipped = false;
-    float fireRate = 0.4f;
+    float fireRate = 0.3f;
     float nextFire;
     public Transform feetPos;
     public float checkRadius;
