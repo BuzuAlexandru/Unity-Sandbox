@@ -10,7 +10,7 @@ public class BatGFX : MonoBehaviour
     public Player playerHealth;
     public int maxHealth = 100;
     public int health;
-    public float searchRange = 10f;
+    public float searchRange = 15f;
 
 
     void Start()
