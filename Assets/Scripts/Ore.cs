@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Ore : MonoBehaviour
 {
@@ -10,13 +11,21 @@ public class Ore : MonoBehaviour
     public float hitPoints;
     public PolygonCollider2D pc;
     public SpriteRenderer sr;
+    public TMP_Text display;
     public Slider hpBar;
-    public float respawn = 60f;
+    public Ingot ingotPrefab;
+    public float respawn = 30f;
     void Start()
     {
         hitPoints = maxHP;
         hpBar.maxValue = maxHP;
         hpBar.value = hitPoints;
+        display.text = string.Concat(ToPascalCase(type), " Ore");
+    }
+
+    string ToPascalCase(string str)
+    {
+        return  char.ToUpper(str[0]) + str.Substring(1);
     }
 
     void Update(){
@@ -32,6 +41,9 @@ public class Ore : MonoBehaviour
                 pc.enabled = false;
                 sr.enabled = false;
                 hpBar.gameObject.SetActive(false);
+                display.enabled = false;
+                Ingot ingot = Instantiate(ingotPrefab,transform.position, transform.rotation);
+                ingot.SetType(type);
                 StartCoroutine(RespawnDelay());
             }
         }
@@ -41,6 +53,7 @@ public class Ore : MonoBehaviour
         yield return new WaitForSeconds(respawn);
         pc.enabled = true;
         sr.enabled = true;
+        display.enabled = true;
         hpBar.gameObject.SetActive(true);
         hitPoints = maxHP;
         hpBar.value = hitPoints;
