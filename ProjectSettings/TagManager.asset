@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ladder
   - Bullet
+  - Enemy
+  - Ingot
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class Player : MonoBehaviour
@@ -27,14 +28,15 @@ public class Player : MonoBehaviour
     Vector3 lookDirection;
     float lookAngle;
 
-    public float health = 100f;
+    public int maxHealth = 100;
+    public int health;
 
     public bool isgrounded = true;
     bool facingRight = true;
     public bool atLadder = false;
     bool prevOrientation = true;
     public bool gunEquipped = false;
-    float fireRate = 0.4f;
+    float fireRate = 0.3f;
     float nextFire;
     public Transform feetPos;
     public float checkRadius;
@@ -45,11 +47,23 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        health = maxHealth;
         inventory = GetComponent<Inventory>();
         crafting = GetComponent<Crafting>();
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
     }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
 
     void Update(){
 
