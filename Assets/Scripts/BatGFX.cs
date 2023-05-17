@@ -24,12 +24,14 @@ public class BatGFX : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
-    {
-        health -= damage;
-        if (health <= 0)
+    void OnTriggerEnter2D(Collider2D theCollision){
+        if (theCollision.CompareTag("Bullet"))
         {
-            Destroy(gameObject);
+            health -= 50;
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

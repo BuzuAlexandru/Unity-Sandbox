@@ -24,8 +24,6 @@ public class Player : MonoBehaviour
 
     public int maxHealth = 100;
     public int health;
-    public int damage;
-    public BatGFX enemyHealth;
 
     public bool isgrounded = true;
     bool facingRight = true;
@@ -56,13 +54,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Bullet")
-        {
-            enemyHealth.TakeDamage(damage);
-        }
-    }
 
     void Update(){
 
