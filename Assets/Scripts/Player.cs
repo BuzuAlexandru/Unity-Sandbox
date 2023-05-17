@@ -35,10 +35,12 @@ public class Player : MonoBehaviour
     public bool atLadder = false;
     bool prevOrientation = true;
     public bool gunEquipped = false;
+    public bool telekinesis = false;
     float fireRate = 0.3f;
     float nextFire;
     public Transform feetPos;
     public float checkRadius;
+    public Transform spawnpoint;
     public LayerMask whatIsGround;
 
     public float speed = 20f;
@@ -58,8 +60,9 @@ public class Player : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            Destroy(gameObject);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            gameObject.transform.position = spawnpoint.position;
+            // Destroy(gameObject);
+            // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
@@ -176,6 +179,9 @@ public class Player : MonoBehaviour
         if (selectedSlotIndex == 0)
             gunEquipped = true;
         else gunEquipped = false;
+        if (selectedSlotIndex == 1)
+            telekinesis = true;
+        else telekinesis = false;
 
         hotbarSelector.transform.position = inventory.hotbarUISlots[selectedSlotIndex].transform.position;
     }

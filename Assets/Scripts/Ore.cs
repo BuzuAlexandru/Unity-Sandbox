@@ -21,6 +21,49 @@ public class Ore : MonoBehaviour
         hpBar.maxValue = maxHP;
         hpBar.value = hitPoints;
         display.text = string.Concat(ToPascalCase(type), " Ore");
+        Color newCol;
+        if(type == "uranium"){
+            if (ColorUtility.TryParseHtmlString("#00FF0F", out newCol))
+            {
+                sr.color = newCol;
+            }
+        }
+        if(type == "aluminum"){
+            if (ColorUtility.TryParseHtmlString("#FFC388", out newCol))
+            {
+                sr.color = newCol;
+            }
+        }
+        if(type == "beryllium"){
+            if (ColorUtility.TryParseHtmlString("#FF332F", out newCol))
+            {
+                sr.color = newCol;
+            }
+        }
+        if(type == "gold"){
+            if (ColorUtility.TryParseHtmlString("#CABD00", out newCol))
+            {
+                sr.color = newCol;
+            }
+        }
+        if(type == "lithium"){
+            if (ColorUtility.TryParseHtmlString("#FF33F1", out newCol))
+            {
+                sr.color = newCol;
+            }
+        }
+        if(type == "plutonium"){
+            if (ColorUtility.TryParseHtmlString("#30A130", out newCol))
+            {
+                sr.color = newCol;
+            }
+        }
+        if(type == "titanium"){
+            if (ColorUtility.TryParseHtmlString("#414141", out newCol))
+            {
+                sr.color = newCol;
+            }
+        }
     }
 
     string ToPascalCase(string str)
