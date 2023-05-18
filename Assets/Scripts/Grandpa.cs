@@ -18,7 +18,7 @@ public class Grandpa : MonoBehaviour
         "Now here you come in play, gotta repay those 30k I paid for your Liberal Arts degree, haha, right?",
         "I lent you this hazmat suit. And, here is a list of what I need from you (press Q). Into the mines you go.",
         "Hurry up, defending your homeland takes some work, come back when you have everything!",
-        "Come back when the task is completed ya wanker."
+        "Excellent, children of Cobrastan will learn in schools about your great efforts to defend our homeland."
         
     };
 
@@ -36,10 +36,12 @@ public class Grandpa : MonoBehaviour
 
     void ChangeText(){
         dialogueCounter += 1;
-        dialogue.text = sentences[dialogueCounter];
-        if(dialogueCounter == 6 && !player.hasNuke){
+        
+        if(dialogueCounter >= 5 && !player.hasNuke){
             next.enabled = false;
             next.interactable = false;
+            dialogueCounter = 5;
         }
+        dialogue.text = sentences[dialogueCounter];
     }
 }

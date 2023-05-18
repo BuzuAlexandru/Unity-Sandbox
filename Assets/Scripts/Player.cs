@@ -71,10 +71,10 @@ public class Player : MonoBehaviour
 
     void Update(){
 
-        if(inventory.inventorySlots[5,2].quantity >= 1){
-            hasNuke = true;
-        }
-        else hasNuke = false;
+        // if(inventory.inventorySlots[5,2].quantity >= 1){
+        //     hasNuke = true;
+        // }
+        // else hasNuke = false;
 
         lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 rotation = lookDirection - transform.position;
