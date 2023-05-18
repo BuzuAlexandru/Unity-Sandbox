@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public GameObject hotbarSelector;
     public Inventory inventory;
     public Crafting crafting;
+    public bool hasNuke = false;
     public bool inventoryShowing = false;
     public bool craftingShowing = false;
     public bool hotbarShowing = true;
@@ -69,6 +70,11 @@ public class Player : MonoBehaviour
 
 
     void Update(){
+
+        if(inventory.inventorySlots[5,2].quantity >= 1){
+            hasNuke = true;
+        }
+        else hasNuke = false;
 
         lookDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 rotation = lookDirection - transform.position;
