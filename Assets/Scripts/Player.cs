@@ -22,13 +22,11 @@ public class Player : MonoBehaviour
     public Transform firePoint;
     public GameObject bulletPrefab;
     public int maxHealth = 100;
-    public int currentHealth;
 
     Vector3 pos;
     Vector3 lookDirection;
     float lookAngle;
 
-    public int maxHealth = 100;
     public int health;
 
     public bool isgrounded = true;
@@ -52,19 +50,21 @@ public class Player : MonoBehaviour
         health = maxHealth;
         inventory = GetComponent<Inventory>();
         crafting = GetComponent<Crafting>();
-        currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
     }
 
     public void TakeDamage(int damage)
     {
         health -= damage;
+        
         if (health <= 0)
         {
             gameObject.transform.position = spawnpoint.position;
+            health = maxHealth;
             // Destroy(gameObject);
             // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+        healthBar.SetHealth(health);
     }
 
 

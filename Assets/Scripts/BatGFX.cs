@@ -29,7 +29,7 @@ public class BatGFX : MonoBehaviour
     void OnTriggerEnter2D(Collider2D theCollision){
         if (theCollision.CompareTag("Bullet"))
         {
-            health -= 50;
+            health -= 500;
             if (health <= 0)
             {
                 aiPath.enabled = false;

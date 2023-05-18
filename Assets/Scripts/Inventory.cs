@@ -197,4 +197,28 @@ public class Inventory : MonoBehaviour
 
 }
 
+void OnTriggerEnter2D(Collider2D theCollision)
+    {
+        if (theCollision.CompareTag("Ingot"))
+        {
+            Ingot ingot = theCollision.transform.gameObject.GetComponent<Ingot>();
+            if(ingot.type == "uranium"){
+                inventorySlots[2,3].quantity += 1;
+            }else if(ingot.type == "titanium"){
+                 inventorySlots[3,3].quantity += 1;
+            }else if(ingot.type == "aluminum"){
+                inventorySlots[4,3].quantity += 1;
+            } else if(ingot.type == "gold"){
+                inventorySlots[5,3].quantity += 1;
+            } else if(ingot.type == "beryllium"){
+                inventorySlots[6,3].quantity += 1;
+            } else if(ingot.type == "lithium"){
+                inventorySlots[7,3].quantity += 1;
+            } else if(ingot.type == "plutonium"){
+                inventorySlots[8,3].quantity += 1;
+            }
+            UpdateInventoryUI();
+        }
+    }
+
 }

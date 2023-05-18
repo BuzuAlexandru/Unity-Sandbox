@@ -5,6 +5,7 @@ public class InteractableObject : MonoBehaviour
 {
     public Rigidbody2D selectedObject;
     public Player player;
+    
     Vector3 offset;
     Vector3 mousePosition;
     public float maxSpeed=10;
