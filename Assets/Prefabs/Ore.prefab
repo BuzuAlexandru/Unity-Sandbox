@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 
-  maxHP: 5
+  maxHP: 4
   hitPoints: 0
   pc: {fileID: 5146535689316927332}
   sr: {fileID: 5146535689316927334}
